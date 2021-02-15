@@ -31,6 +31,8 @@ f(3) = 4 + (2 x 6) + 2 = 18
 위의 패턴을 공식화함.
 
 ``` python
+from derivative_pattern import Functions
+
 # f(x) = 2x^2 + 5x
 f1 = (1, 7)  # (x, f(x))
 f2 = (5, 75)  # (x, f(x))
