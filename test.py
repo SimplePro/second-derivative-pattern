@@ -1,4 +1,4 @@
-from derivate_pattern import Functions
+from derivative_pattern import Functions
 
 # x^2 + 3x - 2
 # f``(x) = 2
