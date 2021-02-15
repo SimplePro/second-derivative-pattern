@@ -29,3 +29,15 @@ f(3) = 4 + (2 x 6) + 2 = 18
 .  
 
 위의 패턴을 공식화함.
+
+``` python
+# f(x) = 2x^2 + 5x
+f1 = (1, 7)  # (x, f(x))
+f2 = (5, 75)  # (x, f(x))
+
+functions = Functions(h=4)  # h=이계도함수
+functions.add_func(f1)  # 첫번째 함숫값 추가
+functions.add_func(f2)  # 두번째 함숫값 추가
+functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
+print(functions.y(x=123942))  # f(123942) 값 반환됨.
+```
