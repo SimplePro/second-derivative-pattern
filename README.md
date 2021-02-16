@@ -32,9 +32,9 @@ f(3) = 4 + (2 x 6) + 2 = 18
 ##### 만든 공식.
 ![image](https://user-images.githubusercontent.com/66504341/108021363-bffb7b00-7061-11eb-9eb6-697f868e9c8a.png)
 
-#### 실제 이차함수와 새로운 공식으로 만든 함수를  
-#### Functions 의 extract_f() 메소드를 이용하여 비교해보면 아래와 같다.  
-#### (빨강 = 새로운 공식으로 만든 함수, 파란 = 실제 함수)
+실제 이차함수와 새로운 공식으로 만든 함수를  
+Functions 의 extract_f() 메소드를 이용하여 비교해보면 완전히 포개어지는 모습을 볼 수 있다.
+(빨강 = 새로운 공식으로 만든 함수, 파란 = 실제 함수)
 ![image](https://user-images.githubusercontent.com/66504341/108022443-e6bab100-7063-11eb-91cb-e2f5fad17815.png)
 
 ``` python
