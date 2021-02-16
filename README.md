@@ -30,7 +30,7 @@ f(3) = 4 + (2 x 6) + 2 = 18
 
 위의 패턴을 공식화함.
 그렇게 새로 연구하여 완성된 공식.
-![image](https://user-images.githubusercontent.com/66504341/108021363-bffb7b00-7061-11eb-9eb6-697f868e9c8a.png)
+![image](https://user-images.githubusercontent.com/66504341/108023088-32218f00-7065-11eb-927d-c2e1db214230.png)
 
 실제 이차함수와 새로운 공식으로 만든 함수를  
 Functions 의 extract_f() 메소드를 이용하여 비교해보면 완전히 포개어지는 모습을 볼 수 있다.  
