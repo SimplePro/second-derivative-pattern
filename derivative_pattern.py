@@ -45,9 +45,13 @@ def least_common_multiple(a, b):
 
 # 3차 연립방정식 메소드.
 def simultaneous_equation(expressions, variables):
-    coefficients = []
-    result = {}
-    calc_expressions = []
+    coefficients = []  # 계수
+    result = {}  # 결과
+    calc_expressions = []  # 연립한 두 식
+
+    # print("first:", expressions[0])
+    # print("second:", expressions[1])
+    # print("third:", expressions[2])
 
     # 문자별 계수만 추출.
     for i in expressions:
@@ -65,7 +69,9 @@ def simultaneous_equation(expressions, variables):
     # 각 순서의 식에 계수 추출한 값
     first, second, third = coefficients
 
-    print(coefficients)
+    # print("first:", first)
+    # print("second:", second)
+    # print("third:", third)
 
     # 첫번째 식과 두번째 식 연립.
     calc_expressions.append(list(first * (least_common_multiple(first[0], second[0]) / first[0])
@@ -78,57 +84,137 @@ def simultaneous_equation(expressions, variables):
     fe = calc_expressions[0]  # fe = first equation
     se = calc_expressions[1]  # se = second equation
 
-    print(fe, se)
+    # print("fe(calc_expressions[0]):", fe)
+    # print("se(calc_expressions[1]):", se)
+
     # 만일 두개의 문자의 계수가 0이라면.
     if fe[:3].count(0.0) == 2 or se[:3].count(0.0) == 2:
         nonzero_variable = 0
 
+        # 계수가 0이 아닌 index 를 찾고, 그 문자를 구함.
         if fe[:3].count(0.0) == 2:
             nonzero_variable = [i for i, d in enumerate(fe[:3]) if d != 0.0][0]
-            # nonzero_variable = np.nonzero(fe[:3] != 0.0)[0][0]
             result[variables[nonzero_variable]] = fe[-1] / fe[nonzero_variable]
 
         elif se[:3].count(0.0) == 2:
             nonzero_variable = [i for i, d in enumerate(se[:3]) if d != 0.0][0]
-            # nonzero_variable = np.nonzero(se[:3] != 0.0)[0][0]
             result[variables[nonzero_variable]] = se[-1] / se[nonzero_variable]
 
-        print(nonzero_variable)
+        # print("nonzero_variable:", nonzero_variable)
+        # print(f"{variables[nonzero_variable]} is {result[variables[nonzero_variable]]}")
 
+        # 구한 문자를 그 전의 식에 반영하여 이차연립방정식으로 만듦.
         first[3] += (-1 * first[nonzero_variable] * result[variables[nonzero_variable]])
         first = np.delete(first, nonzero_variable)
 
         second[3] += (-1 * second[nonzero_variable] * result[variables[nonzero_variable]])
         second = np.delete(second, nonzero_variable)
 
-        print(first, second)
+        third[3] += (-1 * third[nonzero_variable] * result[variables[nonzero_variable]])
+        third = np.delete(third, nonzero_variable)
 
-        equation1 = np.array([(least_common_multiple(first[0], second[0]) / first[0]) * i for i in first]) - np.array(
-            [(least_common_multiple(first[0], second[0]) / second[0]) * i for i in second])
+        # print("first:", first)
+        # print("second:", second)
+        # print("third:", third)
 
-        print(equation1)
-
+        # 구했던 문자의 index 가 0이였다면
         if nonzero_variable == 0:
-            pass
+
+            # 첫번째식과 두번째식이 연립하지 못하는 상황이라면, 첫번째식과 세번째식 연립
+            if (np.array(first) - np.array(second)).tolist().count(0.0) == 3:
+                equation = np.array([(least_common_multiple(first[0], third[0]) / first[0]) * i for i in first]) \
+                           - np.array([(least_common_multiple(first[0], third[0]) / third[0]) * i for i in third])
+
+            # 첫번째식과 세번째식이 연립하지 못하는 상황이라면, 첫번째식과 두번째식 연립
+            elif (np.array(first) - np.array(third)).tolist().count(0.0) == 3:
+                equation = np.array([(least_common_multiple(first[0], second[0]) / first[0]) * i for i in first]) \
+                           - np.array([(least_common_multiple(first[0], second[0]) / second[0]) * i for i in second])
+
+            # 그것도 아니라면, 두번째식과 세번째식 연립
+            else:
+                equation = np.array([(least_common_multiple(second[0], third[0]) / second[0]) * i for i in second]) \
+                           - np.array([(least_common_multiple(second[0], third[0]) / third[0]) * i for i in third])
+
+            # print("equation:", equation)
+
+            result[variables[2]] = equation[2] / equation[1]
+            result[variables[1]] = ((-1 * first[1] * result[variables[2]]) + first[2]) / first[0]
+
+        # 구했던 문자의 index 1 이였다면
         elif nonzero_variable == 1:
-            pass
+
+            # 첫번째식과 두번째식이 연립하지 못하는 상황이라면, 첫번째식과 세번째식 연립
+            if (np.array(first) - np.array(second)).tolist().count(0.0) == 3:
+                equation = np.array([(least_common_multiple(first[0], third[0]) / first[0]) * i for i in first]) \
+                           - np.array([(least_common_multiple(first[0], third[0]) / third[0]) * i for i in third])
+
+            # 첫번째식과 세번째식이 연립하지 못하는 상황이라면, 첫번째식과 두번째식 연립
+            elif (np.array(first) - np.array(third)).tolist().count(0.0) == 3:
+                equation = np.array([(least_common_multiple(first[0], second[0]) / first[0]) * i for i in first]) \
+                           - np.array([(least_common_multiple(first[0], second[0]) / second[0]) * i for i in second])
+
+            # 그것도 아니라면, 두번째식과 세번째식 연립
+            else:
+                equation = np.array([(least_common_multiple(second[0], third[0]) / second[0]) * i for i in second]) \
+                           - np.array([(least_common_multiple(second[0], third[0]) / third[0]) * i for i in third])
+
+            # print("equation:", equation)
+
+            result[variables[2]] = equation[2] / equation[1]
+            result[variables[0]] = ((-1 * second[1] * result[variables[2]]) + second[2]) / second[0]
+
+        # 구했던 문자의 index 가 2 였다면
         elif nonzero_variable == 2:
-            pass
 
+            # 첫번째식과 두번째식이 연립하지 못하는 상황이라면, 첫번째식과 세번째식 연립
+            if (np.array(first) - np.array(second)).tolist().count(0.0) == 3:
+                equation = np.array([(least_common_multiple(first[0], third[0]) / first[0]) * i for i in first]) \
+                           - np.array([(least_common_multiple(first[0], third[0]) / third[0]) * i for i in third])
+
+            # 첫번째식과 세번째식이 연립하지 못하는 상황이라면, 첫번째식과 두번째식 연립
+            elif (np.array(first) - np.array(third)).tolist().count(0.0) == 3:
+                equation = np.array([(least_common_multiple(first[0], second[0]) / first[0]) * i for i in first]) \
+                           - np.array([(least_common_multiple(first[0], second[0]) / second[0]) * i for i in second])
+
+            # 그것도 아니라면, 두번째식과 세번째식 연립
+            else:
+                equation = np.array([(least_common_multiple(second[0], third[0]) / second[0]) * i for i in second]) \
+                           - np.array([(least_common_multiple(second[0], third[0]) / third[0]) * i for i in third])
+
+            # print("equation:", equation)
+
+            result[variables[1]] = equation[2] / equation[1]
+            result[variables[0]] = ((-1 * first[1] * result[variables[1]]) + first[2]) / first[0]
+
+    # 만일 한개의 문자의 계수가 0이라면.
     else:
-        b_equation = np.array([(least_common_multiple(fe[2], se[2]) / fe[2]) * i for i in fe]) - np.array(
+        # 첫번째식과 두번째식을 연립함.
+        equation = np.array([(least_common_multiple(fe[2], se[2]) / fe[2]) * i for i in fe]) - np.array(
                                 [(least_common_multiple(fe[2], se[2]) / se[2]) * i for i in se])
-        print(b_equation)
 
-        result[variables[1]] = b_equation[3] / b_equation[1]
+        # 두번째 문자의 값을 구함.
+        result[variables[1]] = equation[3] / equation[1]
+
+        # 세번째 문자의 값을 구함.
         result[variables[2]] = (-1 * fe[1] * result[variables[1]] + fe[3]) / fe[2]
+
+        # 첫번째 문자의 값을 구함.
         result[variables[0]] = ((-1 * first[1] * result[variables[1]]) + (-1 * first[2] * result[variables[2]]) + first[3]) / first[0]
 
-    print(result)
+    return result
 
 
-# simultaneous_equation(expressions=["+1a +1b -1c=0", "+2a -1b +3c=9", "1a +2b +1c=8"], variables=["a", "b", "c"])
-# simultaneous_equation(expressions=["+1a +2b -3c=0", "+2a -1b -6c=9", "1a +3b +1c=8"], variables=["a", "b", "c"])
+# 연립방정식을 할 수 있도록 식의 형식을 바꿔주는 메소드.
+def to_simultaneous(coefficients, variables, value):
+
+    result = ""
+    for c, v in zip(coefficients, variables):
+        if int(c) > 0:
+            result += f" +{c}{v}"
+        if int(c) < 0:
+            result += f" {c}{v}"
+    result += f"={value}"
+    return result
 
 
 class Functions:
@@ -215,8 +301,27 @@ class Functions:
         #             list(ran)[-1]+1, 5)], color='blue')
         plt.show()
 
+    # 원래의 이차함수 식을 예측하는 메소드.
+    # f(x) = ax^2 + bx + c
     def predict_func(self):
-        pass
+        mid = (self.func[1][0] + self.func[0][0]) // 2
+        mid_y = self.y(x=mid)[0]
+        coefficients = []  # 계수값들
+        values = []  # y값
+        expressions = []
+
+        for i in [self.func[0], (mid, mid_y), self.func[1]]:
+            coefficients.append([i[0] ** 2, i[0], 1])
+            values.append(i[1])
+
+        for c, v in zip(coefficients, values):
+            expressions.append(to_simultaneous(coefficients=c, variables=["a", "b", "c"], value=v))
+
+        print(expressions)
+        result = simultaneous_equation(expressions=expressions, variables=["a", "b", "c"])
+        expression = f'{result["a"]}x^2 + {result["b"]}x + {result["c"]}'
+
+        return result, expression
 
 
 if __name__ == '__main__':
@@ -229,4 +334,5 @@ if __name__ == '__main__':
     functions.add_func(f2)  # 두번째 함숫값 추가
     functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
     print(functions.y(x=123942))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
-    functions.extract_f(ran=range(-500, 501))  # x = -100 ~ 100 의 그래프를 반환함.
+    print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 함수식) 을 반환함.
+    functions.extract_f(ran=range(-500, 501))  # x = -500 ~ 500 의 그래프를 반환함.
