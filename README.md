@@ -32,6 +32,11 @@ f(3) = 4 + (2 x 6) + 2 = 18
 ##### 만든 공식.
 ![image](https://user-images.githubusercontent.com/66504341/108021363-bffb7b00-7061-11eb-9eb6-697f868e9c8a.png)
 
+#### 실제 이차함수와 새로운 공식으로 만든 함수를  
+#### Functions 의 extract_f() 메소드를 이용하여 비교해보면 아래와 같다.  
+#### (빨강 = 새로운 공식으로 만든 함수, 파란 = 실제 함수)
+![image](https://user-images.githubusercontent.com/66504341/108022443-e6bab100-7063-11eb-91cb-e2f5fad17815.png)
+
 ``` python
 from derivative_pattern import Functions
 
@@ -44,4 +49,5 @@ functions.add_func(f1)  # 첫번째 함숫값 추가
 functions.add_func(f2)  # 두번째 함숫값 추가
 functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
 print(functions.y(x=123942))  # f(123942) 값 반환됨.
+functions.extract_f(ran=range(-200, 201))  # x = -200 ~ 200 까지의 그래프가 반환됨.
 ```
