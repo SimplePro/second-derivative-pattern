@@ -31,6 +31,7 @@ f(3) = 4 + (2 x 6) + 2 = 18
 위의 패턴을 공식화함.
 
 ![image](https://user-images.githubusercontent.com/66504341/108021363-bffb7b00-7061-11eb-9eb6-697f868e9c8a.png)
+만든 공식.
 
 ``` python
 from derivative_pattern import Functions
