@@ -49,6 +49,6 @@ functions.add_func(f1)  # 첫번째 함숫값 추가
 functions.add_func(f2)  # 두번째 함숫값 추가
 functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
 print(functions.y(x=123942))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
-print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 함수식) 을 반환함.
+print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 예측된 이차함수식) 을 반환함.
 functions.extract_f(ran=range(-500, 501))  # x = -500 ~ 500 의 그래프를 반환함.
 ```
