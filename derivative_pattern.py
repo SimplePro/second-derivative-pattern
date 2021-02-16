@@ -211,8 +211,13 @@ def to_simultaneous(coefficients, variables, value):
     for c, v in zip(coefficients, variables):
         if int(c) > 0:
             result += f" +{c}{v}"
-        if int(c) < 0:
+
+        elif int(c) < 0:
             result += f" {c}{v}"
+
+        elif int(c) == 0:
+            raise Exception("c must not be zero")
+
     result += f"={value}"
     return result
 
@@ -305,6 +310,8 @@ class Functions:
     # f(x) = ax^2 + bx + c
     def predict_func(self):
         mid = (self.func[1][0] + self.func[0][0]) // 2
+        if mid == 0:
+            mid = self.func[1][0] + 3
         mid_y = self.y(x=mid)[0]
         coefficients = []  # 계수값들
         values = []  # y값
