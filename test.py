@@ -3,9 +3,9 @@ from derivative_pattern import Functions
 # x^2 + 3x - 2
 # f``(x) = 2
 # f(1) = 2
-# f(-1) = -4
+# f(-3) = -2
 
-f1 = (-1, -4)
+f1 = (-3, -2)
 f2 = (1, 2)
 functions = Functions(h=2)  # h=이계도함수
 functions.add_func(f1)  # 첫번째 함숫값 추가
