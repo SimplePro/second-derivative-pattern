@@ -315,7 +315,7 @@ class Functions:
     def predict_func(self):
         mid_x = (self.func[1][0] + self.func[0][0]) // 2
         mid_y = self.y(x=mid_x)[0]
-        print(mid_x)
+
         if mid_x == 0:
             mid_x = self.func[1][0] + 3
 
@@ -347,7 +347,6 @@ class Functions:
         for c, v in zip(coefficients, values):
             expressions.append(to_simultaneous(coefficients=c, variables=["a", "b", "c"], value=v))
 
-        print(expressions)
         result = simultaneous_equation(expressions=expressions, variables=["a", "b", "c"])
         expression = f'{result["a"]}x^2 + {result["b"]}x + {result["c"]}'
 
