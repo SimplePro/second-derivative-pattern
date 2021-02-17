@@ -234,8 +234,12 @@ class Functions:
         if len(self.func) == 0:
             self.func.append(f)
 
+        elif abs(self.func[-1][0] + f[0]) < 2:
+            raise Exception("abs(self.func[-1][0] + f[0]) not be smaller than 2")
+
         elif self.func[-1][0] >= f[0]:
             raise Exception("f[0] not be smaller than functions[-1][0]")
+
         else:
             self.func.append(f)
 
@@ -309,15 +313,34 @@ class Functions:
     # 원래의 이차함수 식을 예측하는 메소드.
     # f(x) = ax^2 + bx + c
     def predict_func(self):
-        mid = (self.func[1][0] + self.func[0][0]) // 2
-        if mid == 0:
-            mid = self.func[1][0] + 3
-        mid_y = self.y(x=mid)[0]
+        mid_x = (self.func[1][0] + self.func[0][0]) // 2
+        mid_y = self.y(x=mid_x)[0]
+        print(mid_x)
+        if mid_x == 0:
+            mid_x = self.func[1][0] + 3
+
+            first_x = self.func[0][0] - 1
+            first_y = self.y(x=first_x)[0]
+            data = [(first_x, first_y), (mid_x, mid_y), self.func[1]]
+
+        elif self.func[0][0] == 0:
+            first_x = -1
+            first_y = self.y(x=first_x)[0]
+            data = [(first_x, first_y), (mid_x, mid_y), self.func[1]]
+
+        elif self.func[1][0] == 0:
+            last_x = 1
+            last_y = self.y(x=last_x)[0]
+            data = [self.func[0], (mid_x, mid_y), (last_x, last_y)]
+
+        else:
+            data = [self.func[0], (mid_x, mid_y), self.func[1]]
+
         coefficients = []  # 계수값들
         values = []  # y값
         expressions = []
 
-        for i in [self.func[0], (mid, mid_y), self.func[1]]:
+        for i in data:
             coefficients.append([i[0] ** 2, i[0], 1])
             values.append(i[1])
 
@@ -333,7 +356,8 @@ class Functions:
 
 if __name__ == '__main__':
     # f(x) = 2x^2 + 5x
-    f1 = (1, 7)  # (x, f(x))
+    f1 = (-3, 3)
+    # f1 = (1, 7)  # (x, f(x))
     f2 = (5, 75)  # (x, f(x))
 
     functions = Functions(h=4)  # h=이계도함수
