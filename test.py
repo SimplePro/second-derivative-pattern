@@ -7,7 +7,7 @@ from derivative_pattern import Functions
 
 f1 = (-3, -2)
 f2 = (1, 2)
-functions = Functions(h=2)  # h=이계도함수
+functions = Functions(h=2, scale=0)  # h=이계도함수
 functions.add_func(f1)  # 첫번째 함숫값 추가
 functions.add_func(f2)  # 두번째 함숫값 추가
 functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
