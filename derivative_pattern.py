@@ -223,11 +223,17 @@ def to_simultaneous(coefficients, variables, value):
 
 
 class Functions:
-    def __init__(self, h):
+    def __init__(self, h, scale=0):
         self.second_derivative = h  # 이계도함수
         self.increase = None  # 증가량 (t)
         self.func = []  # 함숫값을 담는 변수
         self.coefficient_t = 0  # t 의 계수
+
+        if scale < 0:
+            raise Exception("scale must not be smaller than 0")
+        self.scale = scale  # 소수점 자리수
+
+        self.expressions = {}
 
     # function 을 추가하는 메소드.
     def add_func(self, f):
@@ -258,8 +264,22 @@ class Functions:
         n, a = self.func[0]
         m, b = self.func[1]
 
-        self.increase = (b - a - sigma(i=1, k=m - n - 1, h=self.second_derivative)) / (m - n)
+        def to_rn(x, k):
+            if k == 0: return x
+            result = "0."
+            for i in range(2 * k - 1):
+                result += "0"
+            result += str(x)
+            result = float(result)
+            return result
+
+        h = to_rn(x=self.second_derivative, k=self.scale)
+        m_n = (10**self.scale * m) - (10**self.scale * n)
+        self.increase = round((b - a - sigma(i=1, k=int(m_n - 1), h=h)) / m_n, 15)
+        print(m_n, h)
         return self.increase
+        # self.increase = (b - a - sigma(i=1, k=int(m - n - 1), h=self.second_derivative)) / (m - n)
+        # return self.increase
 
     # 입력된 x 값의 함숫값을 구하는 메소드.
     def y(self, x):
@@ -348,21 +368,27 @@ class Functions:
             expressions.append(to_simultaneous(coefficients=c, variables=["a", "b", "c"], value=v))
 
         result = simultaneous_equation(expressions=expressions, variables=["a", "b", "c"])
+
+        self.expressions = result
+
         expression = f'{result["a"]}x^2 + {result["b"]}x + {result["c"]}'
 
         return result, expression
 
+    # 데이터로 도함수를 예측하는 메소드를 만들어야 함.
+
 
 if __name__ == '__main__':
     # f(x) = 2x^2 + 5x
-    f1 = (-3, 3)
-    # f1 = (1, 7)  # (x, f(x))
+    f1 = (-3, 3)  # (x, f(x))
     f2 = (5, 75)  # (x, f(x))
+    # f1 = (-1, -3)
+    # f2 = (4.1, 54.12)
 
-    functions = Functions(h=4)  # h=이계도함수
+    functions = Functions(h=4, scale=0)  # h=이계도함수
     functions.add_func(f1)  # 첫번째 함숫값 추가
     functions.add_func(f2)  # 두번째 함숫값 추가
-    functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
-    print(functions.y(x=123942))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
-    print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 예측된 이차함수식) 을 반환함.
-    functions.extract_f(ran=range(-500, 501))  # x = -500 ~ 500 의 그래프를 반환함.
+    print(functions.t())  # f(n+1) - f(n) = t. 증가량 구하기
+    # print(functions.y(x=123942))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
+    # print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 예측된 이차함수식) 을 반환함.
+    # functions.extract_f(ran=range(-500, 501))  # x = -500 ~ 500 의 그래프를 반환함.
