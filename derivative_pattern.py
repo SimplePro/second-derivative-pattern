@@ -301,7 +301,7 @@ class Functions:
         elif n < x:
             c = sigma(i=1, k=abs(self.coefficient_t - 1), h=h)
 
-        result = a + (self.coefficient_t * self.increase) + c
+        result = round(a + (self.coefficient_t * self.increase) + c, 10)
         return result, f"{a} + ({self.coefficient_t}*{self.increase}) + ({c})"
 
     # 함수 그래프 구하는 메소드.
@@ -390,6 +390,6 @@ if __name__ == '__main__':
     functions.add_func(f1)  # 첫번째 함숫값 추가
     functions.add_func(f2)  # 두번째 함숫값 추가
     print(functions.t())  # f(n+1) - f(n) = t. 증가량 구하기
-    print(functions.y(x=3.0))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
+    print(functions.y(x=3.4))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
     print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 예측된 이차함수식) 을 반환함.
     functions.extract_f(ran=range(-500, 501))  # x = -500 ~ 500 의 그래프를 반환함.
