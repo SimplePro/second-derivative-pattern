@@ -44,7 +44,7 @@ from derivative_pattern import Functions
 f1 = (1, 7)  # (x, f(x))
 f2 = (5, 75)  # (x, f(x))
 
-functions = Functions(h=4)  # h=이계도함수
+functions = Functions(h=4, scale=0)  # h=이계도함수, scale=x 값의 소수점 자리수.
 functions.add_func(f1)  # 첫번째 함숫값 추가
 functions.add_func(f2)  # 두번째 함숫값 추가
 functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
