@@ -1,3 +1,5 @@
+import warnings
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -209,13 +211,13 @@ def to_simultaneous(coefficients, variables, value):
 
     result = ""
     for c, v in zip(coefficients, variables):
-        if int(c) > 0:
+        if c > 0.0:
             result += f" +{c}{v}"
 
-        elif int(c) < 0:
+        elif c < 0.0:
             result += f" {c}{v}"
 
-        elif int(c) == 0:
+        elif c == 0.0:
             raise Exception("c must not be zero")
 
     result += f"={value}"
@@ -223,7 +225,11 @@ def to_simultaneous(coefficients, variables, value):
 
 
 class Functions:
-    def __init__(self, h, scale=0):
+    def __init__(self, h=None, scale=0):
+        if h is None:
+            warn_message = "please define the h variable"
+            warnings.warn(warn_message)
+
         self.second_derivative = h  # 이계도함수
         self.increase = None  # 증가량 (t)
         self.func = []  # 함숫값을 담는 변수
@@ -240,7 +246,7 @@ class Functions:
         if len(self.func) == 0:
             self.func.append(f)
 
-        elif abs(self.func[-1][0] + f[0]) < 2:
+        elif abs((10**self.scale*self.func[-1][0]) + (10**self.scale*f[0])) < 2:
             raise Exception("abs(self.func[-1][0] + f[0]) not be smaller than 2")
 
         elif self.func[-1][0] >= f[0]:
@@ -257,11 +263,16 @@ class Functions:
     def to_rn(x, k):
         if k == 0:
             return x
+
         result = "0."
-        for i in range(2 * k - 1):
-            result += "0"
-        result += str(x)
+        for i in range(2 * k):
+            if i == (2*k-1):
+                result += "1"
+            else:
+                result += "0"
         result = float(result)
+        result *= x
+
         return result
 
     # increase (t) 를 구하는 메소드.
@@ -278,6 +289,7 @@ class Functions:
         h = self.to_rn(x=self.second_derivative, k=self.scale)
         m_n = (10**self.scale * m) - (10**self.scale * n)
         self.increase = round((b - a - sigma(i=1, k=int(m_n - 1), h=h)) / m_n, 10)
+
         return self.increase
 
     # 입력된 x 값의 함숫값을 구하는 메소드.
@@ -334,7 +346,7 @@ class Functions:
     # 원래의 이차함수 식을 예측하는 메소드.
     # f(x) = ax^2 + bx + c
     def predict_func(self):
-        mid_x = (self.func[1][0] + self.func[0][0]) // 2
+        mid_x = (self.func[1][0] + self.func[0][0]) / 2
         mid_y = self.y(x=mid_x)[0]
 
         if mid_x == 0:
@@ -376,7 +388,28 @@ class Functions:
 
         return self.expressions, expression
 
-    # 데이터로 도함수를 예측하는 메소드를 만들어야 함.
+    # 세개의 함숫값으로 도함수를 예측하는 메소드.
+    def h(self):
+        if len(self.func) < 3:
+            raise Exception("len(self.func) must be not smaller than 3")
+
+        coefficients = []  # 계수값들
+        values = []  # y값
+        expressions = []  # 연립방정식
+
+        for i in self.func:
+            coefficients.append([i[0] ** 2, i[0], 1])
+            values.append(i[1])
+
+        for c, v in zip(coefficients, values):
+            expressions.append(to_simultaneous(coefficients=c, variables=["a", "b", "c"], value=v))
+
+        result = simultaneous_equation(expressions=expressions, variables=["a", "b", "c"])
+
+        self.expressions = {"a": round(result["a"], 10), "b": round(result["b"], 10), "c": round(result["c"], 10)}
+
+        self.second_derivative = self.expressions["a"] * 2
+        return self.second_derivative
 
 
 if __name__ == '__main__':
@@ -386,10 +419,10 @@ if __name__ == '__main__':
     f1 = (-11.3, 198.88)
     f2 = (4.1, 54.12)
 
-    functions = Functions(h=4, scale=1)  # h=이계도함수
+    functions = Functions(h=4, scale=1)  # h=이계도함수, scale 정의
     functions.add_func(f1)  # 첫번째 함숫값 추가
     functions.add_func(f2)  # 두번째 함숫값 추가
     print(functions.t())  # f(n+1) - f(n) = t. 증가량 구하기
-    print(functions.y(x=3.4))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
+    print(functions.y(x=3.5))  # f(3.5) 의 값이 반환됨. 함수식도 반환됨.
     print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 예측된 이차함수식) 을 반환함.
     functions.extract_f(ran=range(-500, 501))  # x = -500 ~ 500 의 그래프를 반환함.
