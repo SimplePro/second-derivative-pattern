@@ -47,6 +47,7 @@ f2 = (5, 75)  # (x, f(x))
 functions = Functions(h=4, scale=0)  # h=이계도함수, scale=x 값의 소수점 자리수.
 functions.add_func(f1)  # 첫번째 함숫값 추가
 functions.add_func(f2)  # 두번째 함숫값 추가
+# functions.h()  # 도함수 예측 및 정의 (함숫값이 3개여야 함)
 functions.t()  # f(n+1) - f(n) = t. 증가량 구하기
 print(functions.y(x=123942))  # f(123942) 의 값이 반환됨. 함수식도 반환됨.
 print(functions.predict_func())  # ((x^2 의 계수, x 의 계수, 상수), 예측된 이차함수식) 을 반환함.
